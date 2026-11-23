@@ -1,0 +1,290 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Auth",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "serveur-revealant/rest"
+    }
+  ],
+  "paths": {
+    "/auth/v1/token": {
+      "post": {
+        "tags": [
+          "token"
+        ],
+		"summary": "Login and token generation",
+		"security": [],
+		"description": "Authenticates the user and returns an access token if the credentials are valid",
+		"requestBody": {
+		  "required": true,
+		  "description": "Required parameters:\n- username (string): Required\n- password (string): Required",
+		  "content": {
+			"application/json": {
+			  "schema": {
+				"type": "object",
+				"required": ["username", "password"],
+				"properties": {
+				  "username": {
+					"type": "string",
+					"description": "Username (required)"
+				  },
+				  "password": {
+					"type": "string",
+					"description": "Password (required)"
+				  }
+				}
+			  }
+			}
+		  }
+		},
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+				"schema": {
+				  "type": "object",
+				  "properties": {
+					"status": {
+					  "type": "integer",
+					  "example": 200
+					},
+					"reasonPhrase": {
+					  "type": "string",
+					  "example": "Token generated successfully."
+					},
+					"success": {
+					  "type": "boolean",
+					  "example": true
+					},
+					"token": {
+					  "type": "object",
+					  "properties": {
+						"access_token": {
+						  "type": "string",
+						  "example": "QQrhX7s2dYj..."
+						},
+						"token_type": {
+						  "type": "string",
+						  "example": "Bearer"
+						},
+						"expires_in": {
+						  "type": "integer",
+						  "example": 60
+						}
+					  }
+					}
+				  }
+				}
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication error",
+            "content": {
+              "application/json": {
+				"schema": {
+				  "type": "object",
+				  "properties": {
+					"status": {
+					  "type": "integer",
+					  "example": 401
+					},
+					"reasonPhrase": {
+					  "type": "string",
+					  "example": "Unauthorized"
+					},
+					"success": {
+					  "type": "boolean",
+					  "example": false
+					}
+				  }
+				}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/alert/v1/alert": {
+      "post": {
+        "tags": [
+          "alert"
+        ],
+		"summary": "Create alerts",
+		"security": [
+			{
+				"BearerAuth": []
+			}
+		],
+		"description": "Create a list of new alerts",
+		"requestBody": {
+		  "required": true,
+		  "description": "Required parameters:\n- id (string): Required\n- clusterId (string): Required \n- processLevelId (string): Required\n- timestamp ([yyyy-MM-ddTHH:mm:ss]): Required",
+		  "content": {
+			"application/json": {
+			  "schema": {
+				"type": "object",
+				"required": ["id", "clusterId", "processLevelId", "timestamp"],
+				"properties": {
+				  "id": {
+					"type": "string",
+					"description": "id (required)"
+				  },
+				  "clusterId": {
+					"type": "string",
+					"description": "clusterId (required)"
+				  }
+				  ,
+				  "processLevelId": {
+					"type": "string",
+					"description": "processLevelId (required)"
+				  }
+				  ,
+				  "timestamp": {
+					"type": "string",
+					"description": "timestamp (required)"
+				  }
+				}
+			  }
+			}
+		  }
+		},
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+				"schema": {
+				  "type": "object",
+				  "properties": {
+					"status": {
+					  "type": "string",
+					  "example": "SUCCESS"
+					},
+					"httpCode": {
+					  "type": "integer",
+					  "example": "200"
+					},
+					"total": {
+					  "type": "integer",
+					  "example": 2
+					},
+					"processed": {
+					  "type": "integer",
+					  "example": 2
+					},
+					"failed": {
+					  "type": "integer",
+					  "example": 0
+					}
+				  }
+				}
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication error",
+            "content": {
+              "application/json": {
+				"schema": {
+				  "type": "object",
+				  "properties": {
+					  "error" : {
+						  "type" : "object",
+						  "properties": {
+							"status": {
+							  "type": "integer",
+							  "example": 401
+							},
+							"message": {
+							  "type": "string",
+							  "example": "You are not authorized to access this resource"
+							}
+						  }
+					  }
+				  }
+				}
+              }
+            }
+          },
+          "422": {
+            "description": "data errors",
+            "content": {
+              "application/json": {
+				"schema": {
+				  "type": "object",
+				  "properties": {
+					"status": {
+					  "type": "string",
+					  "example": "PARTIAL_SUCCESS"
+					},
+					"httpCode": {
+					  "type": "integer",
+					  "example": "422"
+					},
+					"total": {
+					  "type": "integer",
+					  "example": 10
+					},
+					"processed": {
+					  "type": "integer",
+					  "example": 8
+					},
+					"failed": {
+					  "type": "integer",
+					  "example": 2
+					},
+					 "errors": {
+					  "type": "array",
+					  "description": "List of processing errors",
+					  "items": {
+						"type": "object",
+						"properties": {
+						  "dataId": {
+							"type": "string",
+							"example": "azdsd...."
+						  },
+						  "code": {
+							"type": "string",
+							"example": "INVALID_VALUE"
+						  },
+						  "message": {
+							"type": "string",
+							"example": "The cluster with id XXXX is unknown."
+						  },
+						  "field": {
+							"type": "string",
+							"example": "clusterId"
+						  }
+						}
+					  }
+					}
+				  }
+				}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+	"components": {
+	  "securitySchemes": {
+		"BearerAuth": {
+		  "type": "http",
+		  "scheme": "bearer",
+		  "bearerFormat": "JWT"
+		}
+	  }
+	},
+  "tags": [
+    {
+      "name": "token",
+      "description": ""
+    }
+  ]
+}

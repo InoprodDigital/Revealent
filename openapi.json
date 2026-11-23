@@ -48,18 +48,6 @@
 				"schema": {
 				  "type": "object",
 				  "properties": {
-					"status": {
-					  "type": "integer",
-					  "example": 200
-					},
-					"reasonPhrase": {
-					  "type": "string",
-					  "example": "Token generated successfully."
-					},
-					"success": {
-					  "type": "boolean",
-					  "example": true
-					},
 					"token": {
 					  "type": "object",
 					  "properties": {

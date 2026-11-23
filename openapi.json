@@ -224,7 +224,7 @@
 					},
 					"httpCode": {
 					  "type": "integer",
-					  "example": "422"
+					  "example": 422
 					},
 					"total": {
 					  "type": "integer",
